@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 app.use(express.json());
+app.use(middleware);
 let courses = [{ id : 1, name : "java"} ,
                 { id : 2, name : "node"} ,
                 { id : 3, name : "react"} ];
@@ -18,7 +19,14 @@ app.post('/courses', (req, res) => {
     res.json(course);
 }
 );
-
+function middleware(req, res, next) {
+    let ip = req.ip;
+    let date = new Date();
+    let host = req.hostname;
+    let method = req.method;
+    console.log(`ip: ${ip} , date: ${date} , host: ${host} , method: ${method}`);
+    next();
+}
 app.put('/courses/:id', (req, res) => {
     const course = courses.find(c => c.id === parseInt(req.params.id));
     course.name = req.body.name;
